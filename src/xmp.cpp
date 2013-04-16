@@ -120,8 +120,8 @@ bool Xmp::hasEntry(QuillMetadata::Tag tag) const
     if (!xmpTags.isEmpty()) {
     foreach (XmpTag tag, xmpTags) {
         if (xmp_has_property(m_xmpPtr,
-                 tag.schema.toAscii().constData(),
-                 tag.tag.toAscii().constData()))
+                 tag.schema.toLatin1().constData(),
+                 tag.tag.toLatin1().constData()))
         return true;
     }
     }
@@ -135,8 +135,8 @@ bool Xmp::hasEntry(Xmp::Tag tag, int zeroBasedIndex) const
     return false;
 
     return (xmp_has_property(m_xmpPtr,
-                 xmpTag.schema.toAscii().constData(),
-                 xmpTag.getIndexedTag(zeroBasedIndex).toAscii().constData()));
+                 xmpTag.schema.toLatin1().constData(),
+                 xmpTag.getIndexedTag(zeroBasedIndex).toLatin1().constData()));
 }
 
 QString Xmp::processXmpString(XmpStringPtr xmpString)
@@ -234,8 +234,8 @@ QVariant Xmp::entry(QuillMetadata::Tag tag) const
         uint32_t propBits;
 
     if (xmp_get_property(m_xmpPtr,
-                 xmpTag.schema.toAscii().constData(),
-                             xmpTag.tag.toAscii().constData(),
+                 xmpTag.schema.toLatin1().constData(),
+                             xmpTag.tag.toLatin1().constData(),
                              xmpStringPtr,
                              &propBits)) {
 
@@ -243,8 +243,8 @@ QVariant Xmp::entry(QuillMetadata::Tag tag) const
         QStringList list;
                 int i = 1;
                 while (xmp_get_array_item(m_xmpPtr,
-                                          xmpTag.schema.toAscii().constData(),
-                                          xmpTag.tag.toAscii().constData(),
+                                          xmpTag.schema.toLatin1().constData(),
+                                          xmpTag.tag.toLatin1().constData(),
                                           i,
                                           xmpStringPtr,
                                           &propBits)) {
@@ -265,8 +265,8 @@ QVariant Xmp::entry(QuillMetadata::Tag tag) const
         XmpIterOptions iterOpts = XMP_ITER_OMITQUALIFIERS;
 
         XmpIteratorPtr xmpIterPtr = xmp_iterator_new(
-            m_xmpPtr, xmpTag.schema.toAscii().constData(),
-            xmpTag.tag.toAscii().constData(),
+            m_xmpPtr, xmpTag.schema.toLatin1().constData(),
+            xmpTag.tag.toLatin1().constData(),
             iterOpts);
 
         XmpStringPtr schema = xmp_string_new();
@@ -589,53 +589,53 @@ void Xmp::setXmpEntry(Xmp::Tag tag, int zeroBasedIndex,
 void Xmp::setXmpEntry(XmpTag xmpTag, const QVariant &entry)
 {
     xmp_delete_property(m_xmpPtr,
-            xmpTag.schema.toAscii().constData(),
-            xmpTag.tag.toAscii().constData());
+            xmpTag.schema.toLatin1().constData(),
+            xmpTag.tag.toLatin1().constData());
 
     if (xmpTag.tagType == XmpTag::TagTypeString){
     xmp_set_property(m_xmpPtr,
-             xmpTag.schema.toAscii().constData(),
-             xmpTag.tag.toAscii().constData(),
+             xmpTag.schema.toLatin1().constData(),
+             xmpTag.tag.toLatin1().constData(),
              entry.toString().toUtf8().constData(), 0);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeStruct){
     xmp_set_property(m_xmpPtr,
-             xmpTag.schema.toAscii().constData(),
-             xmpTag.tag.toAscii().constData(),
+             xmpTag.schema.toLatin1().constData(),
+             xmpTag.tag.toLatin1().constData(),
              entry.toString().toUtf8().constData(), XMP_PROP_VALUE_IS_STRUCT);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeArray){
     xmp_set_property(m_xmpPtr,
-             xmpTag.schema.toAscii().constData(),
-             xmpTag.tag.toAscii().constData(),
+             xmpTag.schema.toLatin1().constData(),
+             xmpTag.tag.toLatin1().constData(),
              entry.toString().toUtf8().constData(), XMP_PROP_VALUE_IS_ARRAY);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeStringList) {
     QStringList list = entry.toStringList();
     foreach (QString string, list)
         xmp_append_array_item(m_xmpPtr,
-                  xmpTag.schema.toAscii().constData(),
-                  xmpTag.tag.toAscii().constData(),
+                  xmpTag.schema.toLatin1().constData(),
+                  xmpTag.tag.toLatin1().constData(),
                   XMP_PROP_ARRAY_IS_UNORDERED,
                   string.toUtf8().constData(), 0);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeAltLang) {
     xmp_set_localized_text(m_xmpPtr,
-                   xmpTag.schema.toAscii().constData(),
-                   xmpTag.tag.toAscii().constData(),
+                   xmpTag.schema.toLatin1().constData(),
+                   xmpTag.tag.toLatin1().constData(),
                    "", "x-default",
                    entry.toString().toUtf8().constData(), 0);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeReal) {
     xmp_set_property_float(m_xmpPtr,
-                   xmpTag.schema.toAscii().constData(),
-                   xmpTag.tag.toAscii().constData(),
+                   xmpTag.schema.toLatin1().constData(),
+                   xmpTag.tag.toLatin1().constData(),
                    entry.toReal(), 0);
     }
     else if (xmpTag.tagType == XmpTag::TagTypeInteger) {
     xmp_set_property_int32(m_xmpPtr,
-                   xmpTag.schema.toAscii().constData(),
-                   xmpTag.tag.toAscii().constData(),
+                   xmpTag.schema.toLatin1().constData(),
+                   xmpTag.tag.toLatin1().constData(),
                    entry.toInt(), 0);
     }
 }
@@ -652,8 +652,8 @@ void Xmp::removeEntry(QuillMetadata::Tag tag)
 
     foreach (XmpTag xmpTag, xmpTags) {
     xmp_delete_property(m_xmpPtr,
-                xmpTag.schema.toAscii().constData(),
-                xmpTag.tag.toAscii().constData());
+                xmpTag.schema.toLatin1().constData(),
+                xmpTag.tag.toLatin1().constData());
     }
 }
 
@@ -664,8 +664,8 @@ void Xmp::removeEntry(Xmp::Tag tag, int zeroBasedIndex)
     return;
 
     xmp_delete_property(m_xmpPtr,
-                 xmpTag.schema.toAscii().constData(),
-                 xmpTag.getIndexedTag(zeroBasedIndex).toAscii().constData());
+                 xmpTag.schema.toLatin1().constData(),
+                 xmpTag.getIndexedTag(zeroBasedIndex).toLatin1().constData());
 }
 
 bool Xmp::write(const QString &fileName) const
@@ -709,7 +709,7 @@ void Xmp::initTags()
 
     XmpStringPtr registeredPrefix = xmp_string_new();
     xmp_register_namespace(regionSchema,
-                     regionPrefix.toAscii().constData(),
+                     regionPrefix.toLatin1().constData(),
                      registeredPrefix);
     regionPrefix = processXmpString(registeredPrefix);
     xmp_string_free(registeredPrefix);
@@ -720,7 +720,7 @@ void Xmp::initTags()
     const char areaNamespace[] = "http://ns.adobe.com/xmp/sType/Area#";
     XmpStringPtr registeredPrefix = xmp_string_new();
     xmp_register_namespace(areaNamespace,
-                      xmpAreaPrefix.toAscii().constData(),
+                      xmpAreaPrefix.toLatin1().constData(),
                       registeredPrefix);
     xmpAreaPrefix = processXmpString(registeredPrefix);
     xmp_string_free(registeredPrefix);
@@ -731,7 +731,7 @@ void Xmp::initTags()
     const char ncoNamespace[] = "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#";
     XmpStringPtr registeredPrefix = xmp_string_new();
     xmp_register_namespace(ncoNamespace,
-                      ncoPrefix.toAscii().constData(),
+                      ncoPrefix.toLatin1().constData(),
                       registeredPrefix);
     ncoPrefix = processXmpString(registeredPrefix);
     xmp_string_free(registeredPrefix);

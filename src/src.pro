@@ -3,7 +3,8 @@
 ##########
 
 TEMPLATE = lib
-TARGET = quillmetadata
+equals(QT_MAJOR_VERSION, 4): TARGET = quillmetadata
+equals(QT_MAJOR_VERSION, 5): TARGET = quillmetadata-qt5
 
 MOC_DIR = .moc
 
@@ -57,7 +58,8 @@ INSTALL_HEADERS = QuillMetadata \
 headers.files = $$INSTALL_HEADERS
 headers.path = $$[QT_INSTALL_HEADERS]/$$TARGET
 target.path = $$[QT_INSTALL_LIBS]
-pkgconfig.files = quillmetadata.pc
+equals(QT_MAJOR_VERSION, 4): pkgconfig.files = quillmetadata.pc
+equals(QT_MAJOR_VERSION, 5): pkgconfig.files = quillmetadata-qt5.pc
 pkgconfig.path = $$[QT_INSTALL_LIBS]/pkgconfig
 prf.files = quillmetadata.prf
 prf.path = $$[QMAKE_MKSPECS]/features
