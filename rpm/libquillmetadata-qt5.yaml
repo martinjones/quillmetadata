@@ -18,6 +18,7 @@ PkgBR:
 PkgConfigBR:
     - Qt5Core
     - Qt5Gui
+    - Qt5Test
     - libexif
     - exempi-2.0
 Requires:
