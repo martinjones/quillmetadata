@@ -122,6 +122,8 @@ private:
     QuillMetadata *gps;
 
     QuillMetadata *region;
+
+    QString imagePath;
 };
 
 #endif  // TEST_LIBQUILL_METADATA_H
