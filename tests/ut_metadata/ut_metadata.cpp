@@ -48,6 +48,11 @@
 
 ut_metadata::ut_metadata()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    imagePath = "/usr/share/libquillmetadata-qt5-tests/images/";
+#else
+    imagePath = "/usr/share/libquillmetadata-tests/images/";
+#endif
 }
 
 void ut_metadata::initTestCase()
@@ -65,13 +70,13 @@ void ut_metadata::cleanupTestCase()
 
 void ut_metadata::init()
 {
-    metadata	= new QuillMetadata("/usr/share/libquillmetadata-tests/images/exif.jpg");
+    metadata	= new QuillMetadata(imagePath + "exif.jpg");
 #ifndef NAMESPACE_REGISTRATION_TEST
-    xmp		= new QuillMetadata("/usr/share/libquillmetadata-tests/images/xmp.jpg");
-    iptc	= new QuillMetadata("/usr/share/libquillmetadata-tests/images/iptc.jpg");
-    gps		= new QuillMetadata("/usr/share/libquillmetadata-tests/images/gps.jpg");
+    xmp		= new QuillMetadata(imagePath + "xmp.jpg");
+    iptc	= new QuillMetadata(imagePath + "iptc.jpg");
+    gps		= new QuillMetadata(imagePath + "gps.jpg");
 
-    region	= new QuillMetadata("/usr/share/libquillmetadata-tests/images/mnaa.jpg");
+    region	= new QuillMetadata(imagePath + "mnaa.jpg");
 #endif
 }
 
@@ -444,7 +449,11 @@ void ut_metadata::testWriteGps()
 void ut_metadata::testGps_XmpExif()
 {
     // TODO: Stop skipping the test once that it becomes possible to only read XMP data
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QSKIP("Reading only XMP data is still unsupported");
+#else
     QSKIP("Reading only XMP data is still unsupported", SkipSingle);
+#endif
 
     QTemporaryFile file;
     file.open();
@@ -609,7 +618,7 @@ void ut_metadata::testClearGps()
     file.open();
     sourceImage.save(file.fileName(), "jpg");
 
-    QuillMetadata gps("/usr/share/libquillmetadata-tests/images/gps.jpg");
+    QuillMetadata gps(imagePath + "gps.jpg");
     gps.removeEntries(QuillMetadata::TagGroup_GPS);
     QVERIFY(gps.write(file.fileName()));
 
@@ -644,10 +653,10 @@ void ut_metadata::testCopyOrientation()
 
 void ut_metadata::testCanRead()
 {
-    QVERIFY(QuillMetadata::canRead("/usr/share/libquillmetadata-tests/images/exif.jpg"));
-    QVERIFY(QuillMetadata::canRead("/usr/share/libquillmetadata-tests/images/iptc.jpg"));
-    QVERIFY(QuillMetadata::canRead("/usr/share/libquillmetadata-tests/images/xmp.jpg"));
-    QVERIFY(QuillMetadata::canRead("/usr/share/libquillmetadata-tests/images/gps.jpg"));
+    QVERIFY(QuillMetadata::canRead(imagePath+"exif.jpg"));
+    QVERIFY(QuillMetadata::canRead(imagePath+"iptc.jpg"));
+    QVERIFY(QuillMetadata::canRead(imagePath+"xmp.jpg"));
+    QVERIFY(QuillMetadata::canRead(imagePath+"gps.jpg"));
 
     QTemporaryFile file;
     file.open();
@@ -657,7 +666,7 @@ void ut_metadata::testCanRead()
 //we add the case to test dump function by creating medatedata object with file name from other team.
 void ut_metadata::testSetOrientationTag()
 {
-    QVERIFY(QuillMetadata::canRead("/usr/share/libquillmetadata-tests/images/exif.jpg"));
+    QVERIFY(QuillMetadata::canRead(imagePath+"exif.jpg"));
     metadata->setEntry(QuillMetadata::Tag_Orientation, QVariant(short(7)));
     QByteArray result = metadata->dump(QuillMetadata::ExifFormat);
     QVERIFY(!result.isNull());
@@ -665,7 +674,7 @@ void ut_metadata::testSetOrientationTag()
 
 void ut_metadata::testOrientationTagSpeedup()
 {
-    QString str("/usr/share/quillimagefilter-tests/images/16_color_palette.png");
+    QString str(imagePath+"16_color_palette.png");
 
     for (int i = 0; i<=8; i++){
         QTemporaryFile file;

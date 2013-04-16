@@ -44,6 +44,7 @@
 #include <QString>
 #include <QMetaType>
 #include <QSharedDataPointer>
+#include <QList>
 
 #include "quillmetadataregion.h"
 
