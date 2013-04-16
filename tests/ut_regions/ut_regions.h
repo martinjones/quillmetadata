@@ -77,6 +77,8 @@ private:
     QuillMetadata *metadata;
 
     QuillMetadata *region;
+
+    QString imagePath;
 };
 
 
