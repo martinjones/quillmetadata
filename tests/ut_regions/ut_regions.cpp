@@ -48,6 +48,11 @@
 
 ut_regions::ut_regions()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    imagePath = "/usr/share/libquillmetadata-qt5-tests/images/";
+#else
+    imagePath = "/usr/share/libquillmetadata-tests/images/";
+#endif
 }
 
 void ut_regions::initTestCase()
@@ -65,9 +70,9 @@ void ut_regions::cleanupTestCase()
 
 void ut_regions::init()
 {
-    metadata	= new QuillMetadata("/usr/share/libquillmetadata-tests/images/exif.jpg");
+    metadata	= new QuillMetadata(imagePath + "exif.jpg");
 #ifndef NAMESPACE_REGISTRATION_TEST
-    region	= new QuillMetadata("/usr/share/libquillmetadata-tests/images/mnaa.jpg");
+    region	= new QuillMetadata(imagePath + "mnaa.jpg");
 #endif
 }
 
@@ -86,7 +91,7 @@ void ut_regions::cleanup()
 #define MYQCOMPARE(x, y) do {\
 QVERIFY2(abs(((int)(x/FUZZYACC+.5)) -\
 	     ((int)(y/FUZZYACC+.5))) <= 1,\
-	 (QString("%1 vs. %2").arg(x).arg(y)).toAscii());} while (0)
+	 (QString("%1 vs. %2").arg(x).arg(y)).toLatin1());} while (0)
 
 void ut_regions::testReadRegions()
 {
@@ -441,7 +446,7 @@ void ut_regions::testNcoRegions()
 
 void ut_regions::testRemoveAllRegionData()
 {
-    QuillMetadata *region = new QuillMetadata("/usr/share/libquillmetadata-tests/images/mnaa.jpg");
+    QuillMetadata *region = new QuillMetadata(imagePath + "mnaa.jpg");
     region->removeEntry(QuillMetadata::Tag_Regions);
 
     QTemporaryFile file;
