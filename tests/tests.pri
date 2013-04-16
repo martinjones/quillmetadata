@@ -18,11 +18,13 @@ CONFIG += create_pc create_prl no_install_prl
 QMAKE_PKGCONFIG_LIBDIR = $$[QT_INSTALL_LIBS]
 
 #LIBS += -lquill -lquillimagefilter -lunittests-quill
-LIBS += -lquillmetadata
+equals(QT_MAJOR_VERSION, 4): LIBS += -lquillmetadata
+equals(QT_MAJOR_VERSION, 5): LIBS += -lquillmetadata-qt5
 QT += testlib
 
 # --- install
-target.path = $$[QT_INSTALL_LIBS]/libquillmetadata-tests/
+equals(QT_MAJOR_VERSION, 4): target.path = $$[QT_INSTALL_LIBS]/libquillmetadata-tests/
+equals(QT_MAJOR_VERSION, 5): target.path = $$[QT_INSTALL_LIBS]/libquillmetadata-qt5-tests/
 INSTALLS += target
 
 # --- clean
